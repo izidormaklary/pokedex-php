@@ -75,6 +75,7 @@ if (isset($_GET["pokeId"])) {
             showEvo($jsonSpecies);
             ?>
         </div>
+        <h2>Moves</h2>
         <ul>
         <?php
         showMoves($json_data);

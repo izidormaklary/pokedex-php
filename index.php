@@ -32,7 +32,12 @@ if (isset($_GET["pokeId"])) {
         echo  "<h1 class='nameID'>"   . $obj['name'] ." ". $obj['id'] . "</h1>" ;
 
     }
+    function showMoves($obj){
 
+    for ($i=0; $i < 10; $i++){
+        echo "<li>"  . $obj['moves'][$i]['move']['name'] . "</li>" ;
+    }
+    }
 
 ?>
 
@@ -47,7 +52,11 @@ if (isset($_GET["pokeId"])) {
             ?>
 
         </div>
-
+        <ul>
+        <?php
+        showMoves($json_data);
+        ?>
+        </ul>
     </div>
     <div class="control" >
         <div>

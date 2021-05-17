@@ -16,8 +16,8 @@
 <?php
 if (isset($_GET["pokeId"])) {
     $input = $_GET["pokeId"];
+    $jsonObj = file_get_contents('https://pokeapi.co/api/v2/pokemon/' . $input) or exit("<h1> 404 poke not found </h1>");
 
-    $jsonObj = file_get_contents('https://pokeapi.co/api/v2/pokemon/' . $input);
     $json_data = json_decode($jsonObj, true);
 
 }else{
@@ -65,7 +65,7 @@ if (isset($_GET["pokeId"])) {
             ?>
         </div>
         <form  method="get">
-            id or name of a pokemon  <input type="text" name="pokeId" />
+            id or name of a pokemon  <input type="text" name="pokeId" required />
             <input class="search" type="submit" name="submit" value="Look for it" />
         </form>
     </div>

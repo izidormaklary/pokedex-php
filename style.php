@@ -21,6 +21,9 @@ body{
     background-color: #b0e6f8;
     font-family: Pixeboy;
 }
+h1{
+text-align: center;
+}
 .header{
     color: rgb( 246, 197, 3 );
     margin-left: auto;
@@ -95,6 +98,7 @@ body{
 
 
 .showContent{
+
     background-color: rgb(177, 176, 172);
     width: 300px;
     height:300px;
@@ -113,7 +117,7 @@ body{
     font-size: 30px;
     padding: 10px;
     font-family: Pixeboy;
-    height: 100%;
+    margin-top: 20%;
     box-shadow: -3px 3px 0px 2px #09397f;
 }
  .input{
@@ -133,4 +137,20 @@ ul {
 columns: 2;
 -webkit-columns: 2;
 -moz-columns: 2;
+}
+.bigImg{
+display: block;
+margin-left: auto;
+margin-right: auto;
+}
+.evoImg{
+float:right;
+}
+.evoName{
+display:inline-block;
+font-size: 20px;
+margin-top:40px;
+}
+form{
+font-size: 20px;
 }

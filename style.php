@@ -150,7 +150,11 @@ float:right;
 display:inline-block;
 font-size: 20px;
 margin-top:40px;
+margin-left: 10px;
 }
 form{
 font-size: 20px;
+}
+h2{
+margin-left: 10px;
 }

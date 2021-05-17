@@ -129,3 +129,8 @@ body{
     border: #92232e solid 10px;
     grid-area: input;
 }
+ul {
+columns: 2;
+-webkit-columns: 2;
+-moz-columns: 2;
+}

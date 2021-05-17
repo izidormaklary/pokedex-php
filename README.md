@@ -14,11 +14,11 @@
 ##### display:
 - [x] name and id
 - [x] picture
-- [ ] evolution
-- [ ] moves
+- [x] evolution
+- [x] moves
   
 
-- [ ] appearance
+- [ ] appearance *almost there*
 
 
 

@@ -30,7 +30,7 @@ if (isset($_GET["pokeId"])) {
 }
     function showImg($obj) {
         $imgpath = $obj['sprites']['front_default'];
-        echo "<img class='bigImg' src='$imgpath' width='200px' alt='pokemon frontal'/>";
+        echo "<img class='bigImg' src='$imgpath' width='200px' alt='previous evoluton pokemon frontal'/>";
     }
     function showNameId($obj){
         echo  "<h1 class='nameID'>"   . $obj['name'] ." ". $obj['id'] . "</h1>" ;
@@ -38,14 +38,15 @@ if (isset($_GET["pokeId"])) {
     }
     function showMoves($obj){
 
-    for ($i=0; $i < 10; $i++){
+    for ($i=0; $i < 10 && $i < count($obj['moves']) ; $i++){
         echo "<li>"  . $obj['moves'][$i]['move']['name'] . "</li>" ;
     }
+
     }
     function showEvo($obj){
         $evo = $obj['evolves_from_species'];
         if (is_null($evo)){
-            echo "no evo";
+            echo "<p class='evoName'>no evo </p>";
         }else {
 
             echo "<p class='evoName'> Evolves from: "  .  $evo['name'] . "</p>";

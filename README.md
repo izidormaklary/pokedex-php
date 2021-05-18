@@ -18,7 +18,8 @@
 - [x] moves
   
 
-- [ ] appearance *almost there*
+- [x] appearance
+
 
 
 

@@ -152,6 +152,7 @@ display:inline-block;
 font-size: 20px;
 margin-top:40px;
 margin-left: 10px;
+width: 190px;
 }
 form{
 font-size: 20px;

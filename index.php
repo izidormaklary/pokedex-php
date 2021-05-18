@@ -21,45 +21,52 @@ if (isset($_GET["pokeId"])) {
 
     $species = file_get_contents('https://pokeapi.co/api/v2/pokemon-species/' . $input);
     $jsonSpecies = json_decode($species, true);
-}else{
+} else {
     $jsonObj = file_get_contents('https://pokeapi.co/api/v2/pokemon/1');
     $json_data = json_decode($jsonObj, true);
 
     $species = file_get_contents('https://pokeapi.co/api/v2/pokemon-species/1');
     $jsonSpecies = json_decode($species, true);
 }
-    function showImg($obj) {
-        $imgpath = $obj['sprites']['front_default'];
-        echo "<img class='bigImg' src='$imgpath' width='200px' alt='previous evoluton pokemon frontal'/>";
-    }
-    function showNameId($obj){
-        echo  "<h1 class='nameID'>"   . $obj['name'] ." ". $obj['id'] . "</h1>" ;
+function showImg($obj){
+    $imgpath = $obj['sprites']['front_default'];
+    echo "<img class='bigImg' src='$imgpath' width='200px' alt='previous evoluton pokemon frontal'/>";
+}
+function showNameId($obj)
+{
+    echo "<h1 class='nameID'>" . $obj['name'] . " " . $obj['id'] . "</h1>";
+}
+function showMoves($obj)
 
-    }
-    function showMoves($obj){
 
-    for ($i=0; $i < 10 && $i < count($obj['moves']) ; $i++){
-        echo "<li>"  . $obj['moves'][$i]['move']['name'] . "</li>" ;
+{
+
+    for ($i = 0; $i < 10 && $i < count($obj['moves']); $i++) {
+        echo "<li>" . $obj['moves'][$i]['move']['name'] . "</li>";
     }
 
-    }
-    function showEvo($obj){
-        $evo = $obj['evolves_from_species'];
-        if (is_null($evo)){
-            echo "<p class='evoName'>no evo </p>";
-        }else {
+}
 
-            echo "<p class='evoName'> Evolves from: "  .  $evo['name'] . "</p>";
-            imgOfprev($evo['name']);
-        }
+function showEvo($obj)
+{
+    $evo = $obj['evolves_from_species'];
+    if (is_null($evo)) {
+        echo "<p class='evoName'>no evo </p>";
+    } else {
+
+        echo "<p class='evoName'> Evolves from: " . $evo['name'] . "</p>";
+        imgOfprev($evo['name']);
     }
-    function imgOfprev($input){
-    $prevPoke = file_get_contents('https://pokeapi.co/api/v2/pokemon/'.$input);
+}
+
+function imgOfprev($input)
+{
+    $prevPoke = file_get_contents('https://pokeapi.co/api/v2/pokemon/' . $input);
     $prevJson = json_decode($prevPoke, true);
     $imgpath = $prevJson['sprites']['front_default'];
-        echo "<img class='evoImg' src='$imgpath' width='100px' alt='pokemon frontal'/>";
+    echo "<img class='evoImg' src='$imgpath' width='100px' alt='pokemon frontal'/>";
 
-    }
+}
 
 ?>
 

@@ -1,12 +1,15 @@
 <?php
-
+error_reporting(0);
+ini_set('display_errors', 0);
 # checking for input then fetching api
 if (isset($_GET["pokeId"])) {
     $input = $_GET["pokeId"];
 
 
 
-    $jsonObj = file_get_contents('https://pokeapi.co/api/v2/pokemon/' . $input) or exit("<h1> 404 poke not found </h1>");
+    $jsonObj = file_get_contents('https://pokeapi.co/api/v2/pokemon/' . $input);
+    if(false === $jsonObj){ $jsonObj = file_get_contents('https://pokeapi.co/api/v2/pokemon/1');}
+    #or exit(register_shutdown_function('shutdown'));
     $json_data = json_decode($jsonObj, true);
 
     $species = file_get_contents($json_data['species']['url']);
@@ -115,6 +118,15 @@ function type($obj)
 }
 
 
+function shutdown()
+{
+    // This is our shutdown function, in
+    // here we can do any last operations
+    // before the script is complete.
+
+    echo 'Script executed with success', PHP_EOL;
+}
+
 
 ?>
 <html>
@@ -128,7 +140,6 @@ function type($obj)
     <style>
         body{
             background-image:linear-gradient( <?php echo type($json_data) ?>) ;
-            
         }
     </style>
 </head>

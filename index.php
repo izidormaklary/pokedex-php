@@ -14,6 +14,7 @@
 
 
 <?php
+# checking for input then fetching api
 if (isset($_GET["pokeId"])) {
     $input = $_GET["pokeId"];
     $jsonObj = file_get_contents('https://pokeapi.co/api/v2/pokemon/' . $input) or exit("<h1> 404 poke not found </h1>");
@@ -22,33 +23,38 @@ if (isset($_GET["pokeId"])) {
     $species = file_get_contents('https://pokeapi.co/api/v2/pokemon-species/' . $input);
     $jsonSpecies = json_decode($species, true);
 } else {
+    # default link that leas to the first pokemon
     $jsonObj = file_get_contents('https://pokeapi.co/api/v2/pokemon/1');
     $json_data = json_decode($jsonObj, true);
 
     $species = file_get_contents('https://pokeapi.co/api/v2/pokemon-species/1');
     $jsonSpecies = json_decode($species, true);
 }
-function showImg($obj){
+# functions called at the right place
+
+# display image
+function showImg($obj)
+{
     $imgpath = $obj['sprites']['front_default'];
     echo "<img class='bigImg' src='$imgpath' width='200px' alt='previous evoluton pokemon frontal'/>";
 }
+# display name and id
 function showNameId($obj)
 {
     echo "<h1 class='nameID'>" . $obj['name'] . " " . $obj['id'] . "</h1>";
 }
+# display 10 moves (or less)
 function showMoves($obj)
-
-
 {
-
     for ($i = 0; $i < 10 && $i < count($obj['moves']); $i++) {
         echo "<li>" . $obj['moves'][$i]['move']['name'] . "</li>";
     }
 
 }
-
+# previous evolution
 function showEvo($obj)
 {
+    # firstly checking if there is previous evo
     $evo = $obj['evolves_from_species'];
     if (is_null($evo)) {
         echo "<p class='evoName'>no evo </p>";
@@ -58,7 +64,7 @@ function showEvo($obj)
         imgOfprev($evo['name']);
     }
 }
-
+# display image of previous evo
 function imgOfprev($input)
 {
     $prevPoke = file_get_contents('https://pokeapi.co/api/v2/pokemon/' . $input);
@@ -70,12 +76,13 @@ function imgOfprev($input)
 
 ?>
 
-
+<!-- wrapper for contents-->
 <div class="wrapper">
-
+    <!-- left side of the pokedex-->
     <div class="dexCont" >
 
         <div class="showContent" id="dispImage">
+            <!-- calling functions inside of the display-->
             <?php
             showImg($json_data);
             ?>
@@ -83,6 +90,7 @@ function imgOfprev($input)
             showEvo($jsonSpecies);
             ?>
         </div>
+        <!--showing moves underneath-->
         <h2>Moves</h2>
         <ul>
         <?php
@@ -90,12 +98,15 @@ function imgOfprev($input)
         ?>
         </ul>
     </div>
+    <!-- right side of the display-->
     <div class="control" >
         <div>
+            <!--calling name and id function -->
             <?php
             showNameId($json_data);
             ?>
         </div>
+        <!-- form that sends the input-->
         <form  method="get">
             id or name of a pokemon  <input type="text" name="pokeId" required />
             <input class="search" type="submit" name="submit" value="Look for it" />

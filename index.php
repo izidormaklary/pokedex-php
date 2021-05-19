@@ -3,6 +3,9 @@
 # checking for input then fetching api
 if (isset($_GET["pokeId"])) {
     $input = $_GET["pokeId"];
+
+
+
     $jsonObj = file_get_contents('https://pokeapi.co/api/v2/pokemon/' . $input) or exit("<h1> 404 poke not found </h1>");
     $json_data = json_decode($jsonObj, true);
 
@@ -15,6 +18,10 @@ if (isset($_GET["pokeId"])) {
 
     $species = file_get_contents('https://pokeapi.co/api/v2/pokemon-species/1');
     $jsonSpecies = json_decode($species, true);
+}
+function increase($obj){
+    global $input;
+    $input = $obj['id'] + 1;
 }
 # functions called at the right place
 
@@ -60,6 +67,22 @@ function imgOfprev($input)
     return $imgpath;
     }
 }
+function nextPoke($obj){
+    return $obj['id'] + 1;
+}
+function prevPoke($obj){
+    if( $obj['id'] === 1 ) {
+        return 1;
+    }else{
+        return $obj['id'] - 1;
+    }
+}
+function disableButton($input)
+{
+    if ($input === "no evo") {
+        return "disabled";
+    }
+}
 
 ?>
 <html>
@@ -70,9 +93,12 @@ function imgOfprev($input)
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>pokedex</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+        body{
+            background-image: ;
+        }
+    </style>
 </head>
-
-
 <body>
 <h1 class="header">
     Pokédex
@@ -87,7 +113,13 @@ function imgOfprev($input)
             <img class='bigImg' src='<?php echo showImg($json_data); ?>' width='200px' alt='previous evoluton pokemon frontal'/>
 
             <p class='evoName'>Evolves from: <?php echo showEvo($jsonSpecies); ?> </p>
-            <img class='evoImg' src='<?php echo imgOfprev(showEvo($jsonSpecies) ); ?> ' width='100px' alt='pokemon frontal'/>
+            <form  method="get">
+                <input type="hidden" name="pokeId" value="<?php echo showEvo($jsonSpecies);?>" required />
+                <button class="prevEvo" <?php echo disableButton(showEvo($jsonSpecies)); ?> >
+                <input type="hidden"  name="submit" value="Look for it" />
+                <img class='evoImg' name="pokeId" src='<?php echo imgOfprev(showEvo($jsonSpecies) ); ?> ' width='100px' height="100px" alt='pokemon frontal'/>
+                </button>
+            </form>
         </div>
         <!--showing moves underneath-->
         <h2>Moves</h2>
@@ -106,7 +138,18 @@ function imgOfprev($input)
             id or name of a pokemon  <input type="text" name="pokeId" required />
             <input class="search" type="submit" name="submit" value="Look for it" />
         </form>
+
+        <form  method="get" class="prevnext prev">
+            <input type="hidden" name="pokeId" value="<?php echo prevPoke($json_data);?>" required />
+            <input class="search steps" type="submit" name="submit" value="<" />
+        </form>
+        <form  method="get" class="prevnext next">
+            <input type="hidden" name="pokeId" value="<?php echo nextPoke($json_data);?>" required />
+            <input class="search steps" type="submit" name="submit" value=">" />
+        </form>
+
     </div>
+
 
 </div>
 </body>

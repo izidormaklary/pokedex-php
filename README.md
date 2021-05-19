@@ -21,7 +21,7 @@
 - [x] appearance
 
 
-![img.png](img.png)
+![screenshot](resources/img.png)
 
 
 

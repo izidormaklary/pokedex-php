@@ -28,8 +28,8 @@ before extras:
 
 ### extras:
 
-- [x] next previous button
-- [ ] gradient background depending on the pokemon types
+- [x] next previous button (previous evolution also clickable)
+- [x] gradient background depending on the pokemon types
 - [ ] extra info for each item on the page
 - [ ] encounters *(extra spicy)*
 

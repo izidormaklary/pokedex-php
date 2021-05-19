@@ -7,7 +7,6 @@
     src: url("resources/Pixeboy-z8XGD.ttf") format("truetype");
 }
 body{
-    background-color: #b0e6f8;
     font-family: Pixeboy;
 }
 h1{

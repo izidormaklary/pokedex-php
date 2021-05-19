@@ -20,8 +20,9 @@
 
 - [x] appearance
 
+---
 
-
+before extras:
 
 ![screenshot](resources/img.png)
 
@@ -32,7 +33,11 @@
 - [ ] extra info for each item on the page
 - [ ] encounters *(extra spicy)*
 
+---
 
+after extras:
+
+![screenshot](resources/screenshot2.png)
 
 
 previous project: https://github.com/izidormaklary/pokedex-js-project

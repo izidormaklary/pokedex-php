@@ -27,7 +27,7 @@
 
 ### extras:
 
-- [ ] next previous button
+- [x] next previous button
 - [ ] gradient background depending on the pokemon types
 - [ ] extra info for each item on the page
 - [ ] encounters *(extra spicy)*

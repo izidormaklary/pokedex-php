@@ -83,6 +83,38 @@ function disableButton($input)
         return "disabled";
     }
 }
+function type($obj)
+{
+
+    $type = array(
+        "normal" => "144,	153,	161,",
+        "fighting" => "206,	64,	105,",
+        "flying" => "143,	167,	221,",
+        "poison" => "170,	106,	200,",
+        "ground" => "216,	119,	70,",
+        "rock" => "198,	184,	139,",
+        "bug" => "143,	193,	45,",
+        "ghost" => "126,	184,	35,",
+        "steel" => "90,	142,	161,",
+        "fire" => "90,	142,	161,",
+        "water" => "76,	144,	212,",
+        "grass" => "99,	188,	91,",
+        "electric" => "244,	209,	60,",
+        "psychic" => "249,	113,	118,",
+        "ice" => "116,	206,	192,",
+        "dragon" => "12,	109,	196,",
+        "dark" => "91,	83,	102,",
+        "fairy" => "236,	143,	230,",
+        "unknown" => "236,	143,	230,",
+        "shadow" => "236,	143,	230,",
+    );
+    $typeObject = $obj['types'][0]['type']['name'];
+    $colour = $type["$typeObject"];
+
+    return "rgba(".$colour." 1), rgba(".$colour." 0.3), rgba(".$colour." 1)";
+}
+
+
 
 ?>
 <html>
@@ -95,7 +127,8 @@ function disableButton($input)
     <link rel="stylesheet" type="text/css" href="style.css">
     <style>
         body{
-            background-image: ;
+            background-image:linear-gradient( <?php echo type($json_data) ?>) ;
+            
         }
     </style>
 </head>
@@ -105,12 +138,13 @@ function disableButton($input)
 </h1>
 <!-- wrapper for contents-->
 <div class="wrapper">
+
     <!-- left side of the pokedex-->
     <div class="dexCont" >
 
         <div class="showContent" id="dispImage">
             <!-- calling functions inside of the display-->
-            <img class='bigImg' src='<?php echo showImg($json_data); ?>' width='200px' alt='previous evoluton pokemon frontal'/>
+            <img class='bigImg' src='<?php echo showImg($json_data); ?>' width='200px' height="200px" alt='previous evoluton pokemon frontal'/>
 
             <p class='evoName'>Evolves from: <?php echo showEvo($jsonSpecies); ?> </p>
             <form  method="get">

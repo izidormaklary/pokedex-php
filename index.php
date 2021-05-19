@@ -9,7 +9,7 @@ if (isset($_GET["pokeId"])) {
 
     $jsonObj = file_get_contents('https://pokeapi.co/api/v2/pokemon/' . $input);
     if(false === $jsonObj){ $jsonObj = file_get_contents('https://pokeapi.co/api/v2/pokemon/1');}
-    #or exit(register_shutdown_function('shutdown'));
+
     $json_data = json_decode($jsonObj, true);
 
     $species = file_get_contents($json_data['species']['url']);
@@ -22,10 +22,7 @@ if (isset($_GET["pokeId"])) {
     $species = file_get_contents('https://pokeapi.co/api/v2/pokemon-species/1');
     $jsonSpecies = json_decode($species, true);
 }
-function increase($obj){
-    global $input;
-    $input = $obj['id'] + 1;
-}
+
 # functions called at the right place
 
 # display image
@@ -70,25 +67,37 @@ function imgOfprev($input)
     return $imgpath;
     }
 }
+# changes inputs id
 function nextPoke($obj){
-    return $obj['id'] + 1;
+    #skip the gaps
+    if($obj['id'] === 10220){
+        return 1;
+    }elseif ($obj['id'] === 898){
+        return 10001;
+    }else {
+        return $obj['id'] + 1;
+    }
 }
 function prevPoke($obj){
+    #skip the gaps
     if( $obj['id'] === 1 ) {
-        return 1;
-    }else{
+        return 10220;
+    }elseif ($obj['id'] === 10001){
+        return 898;
+    }else {
         return $obj['id'] - 1;
     }
 }
+# disables previous evolution button
 function disableButton($input)
 {
     if ($input === "no evo") {
         return "disabled";
     }
 }
+# all types with rgb colour codes
 function type($obj)
 {
-
     $type = array(
         "normal" => "144,	153,	161,",
         "fighting" => "206,	64,	105,",
@@ -111,23 +120,12 @@ function type($obj)
         "unknown" => "236,	143,	230,",
         "shadow" => "236,	143,	230,",
     );
+    # matching the objects type with the right element from the array
     $typeObject = $obj['types'][0]['type']['name'];
     $colour = $type["$typeObject"];
-
+# returning the css compatible gradient with transparency edit
     return "rgba(".$colour." 1), rgba(".$colour." 0.3), rgba(".$colour." 1)";
 }
-
-
-function shutdown()
-{
-    // This is our shutdown function, in
-    // here we can do any last operations
-    // before the script is complete.
-
-    echo 'Script executed with success', PHP_EOL;
-}
-
-
 ?>
 <html>
 <head>
@@ -183,7 +181,7 @@ function shutdown()
             id or name of a pokemon  <input type="text" name="pokeId" required />
             <input class="search" type="submit" name="submit" value="Look for it" />
         </form>
-
+        <!-- two forms with values according to the actual pokemons id (+-1), the submission sends the number and it considers as "pokeId"-->
         <form  method="get" class="prevnext prev">
             <input type="hidden" name="pokeId" value="<?php echo prevPoke($json_data);?>" required />
             <input class="search steps" type="submit" name="submit" value="<" />

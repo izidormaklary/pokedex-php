@@ -165,6 +165,7 @@ margin-left: 10px;
     cursor: crosshair;
 }
 .prevnext{
+    margin-top: -120px;
     width: 50%;
     display: inline-block;
 }

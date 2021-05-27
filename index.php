@@ -2,102 +2,126 @@
 error_reporting(0);
 ini_set('display_errors', 0);
 # checking for input then fetching api
-if (isset($_GET["pokeId"])) {
-    $input = $_GET["pokeId"];
-
-
-
-    $jsonObj = file_get_contents('https://pokeapi.co/api/v2/pokemon/' . $input);
-    if(false === $jsonObj){ $jsonObj = file_get_contents('https://pokeapi.co/api/v2/pokemon/1');}
-
-    $json_data = json_decode($jsonObj, true);
-
-    $species = file_get_contents($json_data['species']['url']);
-    $jsonSpecies = json_decode($species, true);
-} else {
-    # default link that leads to the first pokemon
-    $jsonObj = file_get_contents('https://pokeapi.co/api/v2/pokemon/1');
-    $json_data = json_decode($jsonObj, true);
-
-    $species = file_get_contents('https://pokeapi.co/api/v2/pokemon-species/1');
-    $jsonSpecies = json_decode($species, true);
-}
 
 # functions called at the right place
 
-# display image
-function showImg($obj)
-{
-    $imgpath = $obj['sprites']['front_default'];
-    return $imgpath;
-}
-# display name and id
-function showNameId($obj)
-{
-   return $obj['name'] . " " . $obj['id'];
-}
-# display 10 moves (or less)
-function showMoves($obj)
-{
-    for ($i = 0; $i < 10 && $i < count($obj['moves']); $i++) {
-        echo "<li>" . $obj['moves'][$i]['move']['name'] . "</li>";
+class Poke {
+    protected $json;
+    protected string $name;
+    protected int $id;
+    protected string $imgUrl;
+    protected array $moves;
+    protected $evo;
+    protected string $type;
+    protected string $imgofPrev = "./resources/pokeball.png";
+    protected string $disable ="";
+
+    public function __construct( $ind=1)
+    {
+        $this->json = $this->fetchAPI($ind);
+        $this->name = $this->json['name'];
+        $this->id = $this->json['id'];
+        $this->imgUrl = $this->json['sprites']['front_default'];
+        $this->moves = $this->json['moves'];
+        $this->type = $this->json ['types'][0]['type']['name'];
+        $species = file_get_contents($this->json['species']['url']);
+        $jsonSpecies = json_decode($species, true);
+        $this->evo = $jsonSpecies['evolves_from_species'];
+        if (is_null($this->evo)) {
+            $this->evo= "no evo";
+            $this->disable= "disabled";
+        } else {
+            $this->evo= $this->evo['name'];
+            $prevJson = $this->fetchAPI($this->evo);
+            $this->imgofPrev = $prevJson['sprites']['front_default'];
+        }
+    }
+    function fetchAPI($index){
+        $jsonObj = file_get_contents('https://pokeapi.co/api/v2/pokemon/' . $index);
+        return json_decode($jsonObj, true);
+    }
+
+    public function getName() : string
+    {
+        return $this->name;
+    }
+    function prevPoke(){
+        #skip the gaps
+        if( $this->id === 1 ) {
+            return 10220;
+        }elseif ($this->id === 10001){
+            return 898;
+        }else {
+            return $this->id - 1;
+        }
+    }
+    function showMoves()
+    {
+        for ($i = 0; $i < 10 && $i < count($this->moves); $i++) {
+            echo "<li>" . $this->moves[$i]['move']['name'] . "</li>";
+        }
+
+    }
+    function nextPoke(){
+        #skip the gaps
+        if($this->id === 10220){
+            return 1;
+        }elseif ($this->id === 898){
+            return 10001;
+        }else {
+            return $this->id + 1;
+        }
+    }
+
+    public function getEvo()
+    {
+        return $this->evo;
+    }
+
+    public function getImgofPrev()
+    {
+        return $this->imgofPrev;
+    }
+
+    public function getDisable(): string
+    {
+        return $this->disable;
+    }
+
+    public function getImgUrl()
+    {
+        return $this->imgUrl;
+    }
+
+    function showNameId()
+    {
+        return $this->name . " " . $this->id;
+    }
+
+    public function getType()
+    {
+        return $this->type;
     }
 
 }
-# previous evolution
-function showEvo($obj)
-{
-    # firstly checking if there is previous evo
-    $evo = $obj['evolves_from_species'];
-    if (is_null($evo)) {
-        return "no evo";
-    } else {
-        return $evo['name'];
-    }
+if (isset($_GET['pokeId'])) {
+    $poke = new Poke($_GET['pokeId']);
+}else{
+    $poke= new Poke();
 }
-# display image of previous evo
-function imgOfprev($input)
-{
-    if ($input === "no evo"){
-        return "./resources/pokeball.png";
-    }else{
-    $prevPoke = file_get_contents('https://pokeapi.co/api/v2/pokemon/' . $input);
-    $prevJson = json_decode($prevPoke, true);
-    $imgpath = $prevJson['sprites']['front_default'];
-    return $imgpath;
-    }
-}
-# changes inputs id
-function nextPoke($obj){
-    #skip the gaps
-    if($obj['id'] === 10220){
-        return 1;
-    }elseif ($obj['id'] === 898){
-        return 10001;
-    }else {
-        return $obj['id'] + 1;
-    }
-}
-function prevPoke($obj){
-    #skip the gaps
-    if( $obj['id'] === 1 ) {
-        return 10220;
-    }elseif ($obj['id'] === 10001){
-        return 898;
-    }else {
-        return $obj['id'] - 1;
-    }
-}
+# display image
+
+# display name and id
+
+# display 10 moves (or less)
+
+
 # disables previous evolution button
-function disableButton($input)
-{
-    if ($input === "no evo") {
-        return "disabled";
-    }
-}
+
 # all types with rgb colour codes
-function type($obj)
+function type()
 {
+global $poke;
     $type = array(
         "normal" => "144,	153,	161,",
         "fighting" => "206,	64,	105,",
@@ -121,8 +145,7 @@ function type($obj)
         "shadow" => "236,	143,	230,",
     );
     # matching the objects type with the right element from the array
-    $typeObject = $obj['types'][0]['type']['name'];
-    $colour = $type["$typeObject"];
+    $colour = $type[$poke->getType()];
 # returning the css compatible gradient with transparency edit
     return "rgba(".$colour." 1), rgba(".$colour." 0.3), rgba(".$colour." 1)";
 }
@@ -137,7 +160,7 @@ function type($obj)
     <link rel="stylesheet" type="text/css" href="style.css">
     <style>
         body{
-            background-image:linear-gradient( <?php echo type($json_data) ?>) ;
+            background-image:linear-gradient( <?php echo type() ?>) ;
         }
     </style>
 </head>
@@ -153,28 +176,28 @@ function type($obj)
 
         <div class="showContent" id="dispImage">
             <!-- calling functions inside of the display-->
-            <img class='bigImg' src='<?php echo showImg($json_data); ?>' width='200px' height="200px" alt='previous evoluton pokemon frontal'/>
+            <img class='bigImg' src='<?php echo $poke->getImgUrl() ?>' width='200px' height="200px" alt='previous evoluton pokemon frontal'/>
 
-            <p class='evoName'>Evolves from: <?php echo showEvo($jsonSpecies); ?> </p>
+            <p class='evoName'>Evolves from: <?php echo $poke->getEvo() ?> </p>
             <form  method="get">
-                <input type="hidden" name="pokeId" value="<?php echo showEvo($jsonSpecies);?>" required />
-                <button class="prevEvo" <?php echo disableButton(showEvo($jsonSpecies)); ?> >
+                <input type="hidden" name="pokeId" value="<?php echo $poke->getEvo();?>" required />
+                <button class="prevEvo" <?php echo $poke->getDisable(); ?> >
                 <input type="hidden"  name="submit" value="Look for it" />
-                <img class='evoImg' name="pokeId" src='<?php echo imgOfprev(showEvo($jsonSpecies) ); ?> ' width='100px' height="100px" alt='pokemon frontal'/>
+                <img class='evoImg' name="pokeId" src='<?php echo $poke->getImgofPrev() ; ?> ' width='100px' height="100px" alt='pokemon frontal'/>
                 </button>
             </form>
         </div>
         <!--showing moves underneath-->
         <h2>Moves</h2>
         <ul>
-        <?php showMoves($json_data); ?>
+        <?php $poke->showMoves(); ?>
         </ul>
     </div>
     <!-- right side of the display-->
     <div class="control" >
         <div>
             <!--calling name and id function -->
-            <h1 class='nameID'> <?php echo showNameId($json_data); ?> </h1>
+            <h1 class='nameID'> <?php echo $poke->showNameId(); ?> </h1>
         </div>
         <!-- form that sends the input-->
         <form  method="get">
@@ -183,11 +206,11 @@ function type($obj)
         </form>
         <!-- two forms with values according to the actual pokemons id (+-1), the submission sends the number and it considers as "pokeId"-->
         <form  method="get" class="prevnext prev">
-            <input type="hidden" name="pokeId" value="<?php echo prevPoke($json_data);?>" required />
+            <input type="hidden" name="pokeId" value="<?php echo $poke->prevPoke();?>" required />
             <input class="search steps" type="submit" name="submit" value="<" />
         </form>
         <form  method="get" class="prevnext next">
-            <input type="hidden" name="pokeId" value="<?php echo nextPoke($json_data);?>" required />
+            <input type="hidden" name="pokeId" value="<?php echo $poke->nextPoke();?>" required />
             <input class="search steps" type="submit" name="submit" value=">" />
         </form>
 
